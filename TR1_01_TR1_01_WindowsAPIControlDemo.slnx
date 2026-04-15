@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/ソリューション項目/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="TR1_01_TR1_01_WindowsAPIControlDemo.vcxproj" Id="337fe876-be0b-4b75-8c9a-8a12126c6fdc" />
+</Solution>
