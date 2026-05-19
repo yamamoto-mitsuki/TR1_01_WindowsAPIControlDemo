@@ -1,8 +1,8 @@
-root = true
+﻿root = true
 
 [*]
 indent_style = space
-indent_size = 2
+indent_size = 4
 charset = utf-8-bom;
 
 # スペルミスをintellisense上での「エラー」として扱う
@@ -15,3 +15,7 @@ spelling_languages = en-us
 spelling_use_default_exclusion_dictionary = true
 # 自分の除外辞書を指定
 spelling_exclusion_path = ./exclusion.dic
+
+# logファイルをバージョン管理の対象外にする
+*.log
+/logs

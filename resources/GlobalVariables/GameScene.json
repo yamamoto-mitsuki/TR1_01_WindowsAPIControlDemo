@@ -1,0 +1,21 @@
+{
+    "GameScene": {
+        "Camera": {
+            "Translation": [
+                8.0,
+                0.0,
+                -10.0
+            ]
+        },
+        "DirectionalLight": {
+            "Direction": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "Intensity": 1.0
+        },
+        "Test": {},
+        "Test2": {}
+    }
+}
