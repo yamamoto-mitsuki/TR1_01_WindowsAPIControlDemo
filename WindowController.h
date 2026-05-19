@@ -7,7 +7,7 @@ class Win32Window;
 // ウィンドウ制御クラス
 class WindowController {
 public:
-    void Initialize();
+    void Initialize(Player* player);
     void Update();
 
 private:

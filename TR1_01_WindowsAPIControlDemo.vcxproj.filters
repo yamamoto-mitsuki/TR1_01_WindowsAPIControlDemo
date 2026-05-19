@@ -13,14 +13,11 @@
     <Filter Include="Character">
       <UniqueIdentifier>{15fb9579-32f0-44bc-a4b6-d960bb5e7925}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{62b4a789-933d-4f24-9ed1-a0d4089ced38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CG2_Projects\GameScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CG2_Projects\main.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\CG2_Projects\TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -33,11 +30,14 @@
     <ClCompile Include="Player.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CG2_Projects\GameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\CG2_Projects\TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -49,6 +49,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Const.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

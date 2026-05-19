@@ -1,4 +1,6 @@
-#pragma once
+﻿#pragma once
+#include "Player.h"
+#include "WindowController.h"
 #include "MyEngine/Camera/Camera.h"
 #include "MyEngine/Camera/DebugCamera.h"
 #include "MyEngine/Render/ModelManager.h"
@@ -20,9 +22,8 @@ private:
 	std::unique_ptr<Camera> camera_;
 	std::unique_ptr<DebugCamera> debugCamera_;
 	std::unique_ptr<DirectionalLight> directionalLight_;
-
-	uint32_t modelHandle_ = 0u;
-	ModelManager::ModelConfig modelConfig_;
+    std::unique_ptr<Player> player_;
+    std::unique_ptr<WindowController> wndController_;
 
 	bool isDebugCameraActive_ = false;
 };

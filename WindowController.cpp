@@ -1,19 +1,21 @@
-﻿#include "WindowController.h"
-#include "Player.h"
+﻿#include "Player.h"
+#include "Const.h"
+#include "WindowController.h"
 #include "MyEngine/Engine.h"
+
 
 //==========================================
 // 初期化
 //==========================================
-void  WindowController::Initialize() {
-
+void  WindowController::Initialize(Player* player) {
+    player_ = player;
 }
 
 //==========================================
 // 更新
 //==========================================
 void WindowController::Update() {
-
+    SetCanClose();
 }
 
 //==========================================
@@ -22,7 +24,12 @@ void WindowController::Update() {
 
 // ===== ウィンドウの閉じれない制限 =====
 void WindowController::SetCanClose() {
-    Player::GoalState goalState = player_->GetGoalState();
-    Win32Window mainWindow = Engine::GetWindowManager()
-        ->GetWindowByTitle(L"Title");
+    Win32Window* mainWindow = Engine::GetWindowManager()->GetWindowByTitle(kMainWindowName);
+
+    // クリアするまでウィンドウが閉じれない
+    if (mainWindow) {
+        mainWindow->onCanClose_ = [this]() {
+            return player_->GetGoalState() == Player::GoalState::Goal;
+        };
+    }
 }

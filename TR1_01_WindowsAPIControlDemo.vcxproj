@@ -12,16 +12,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AL3_Projects\CameraController.cpp" />
-    <ClCompile Include="..\CG2_Projects\GameScene.cpp" />
-    <ClCompile Include="..\CG2_Projects\main.cpp" />
     <ClCompile Include="..\CG2_Projects\TitleScene.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="WindowController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\AL3_Projects\CameraController.h" />
-    <ClInclude Include="..\CG2_Projects\GameScene.h" />
     <ClInclude Include="..\CG2_Projects\TitleScene.h" />
+    <ClInclude Include="Const.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="WindowController.h" />
   </ItemGroup>
