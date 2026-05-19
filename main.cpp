@@ -13,7 +13,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 #ifdef _DEBUG
 	wc.isImGui = true;
 	wc.gameViewStart = { 0.0f,0.0f };
-	wc.gameViewEnd.x = 0.75f;
+	wc.gameViewEnd.x = 0.5f;
 #endif
 	Engine::Initialize(wc, std::make_unique<GameScene>());
 

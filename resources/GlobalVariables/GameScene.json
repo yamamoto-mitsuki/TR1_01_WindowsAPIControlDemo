@@ -15,6 +15,9 @@
             ],
             "Intensity": 1.0
         },
+        "Player": {
+            "GoalState": 1
+        },
         "Test": {},
         "Test2": {}
     }

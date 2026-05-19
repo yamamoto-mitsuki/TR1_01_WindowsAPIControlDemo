@@ -50,6 +50,10 @@ void GameScene::Initialize() {
 	gv->SetValue("GameScene", "DirectionalLight", "Direction", Vector3{1.0f, 1.0f, 0.0f});
 	gv->SetValue("GameScene", "DirectionalLight", "Intensity", 1.0f);
 	gv->SetValue("GameScene", "Camera", "Translation", Vector3{0.0f, 0.0f, -10.0f});
+    GlobalVariables::ComboItem goalCombo;
+    goalCombo.options = { "Not", "Goal" };
+    goalCombo.currentIndex = 0;
+    gv->AddItem("GameScene", "Player", "GoalState", goalCombo);
 }
 
 //==========================================
@@ -80,6 +84,7 @@ void GameScene::Update() {
 #ifdef USE_IMGUI
     const Vector2& imiPos = { 0.0f,0.0f };
     const Vector2& imiSize = { -1.0f,-1.0f };
+   
     ImGuiManager::AddDrawRequest(ImGuiManager::ImGuiRegion::Right, imiPos,imiSize,[]() {
         GlobalVariables::GetInstance()->Update();
     });
