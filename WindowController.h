@@ -21,8 +21,9 @@ public:
 
     // 調整項目
     static inline NotificationType kAddWindowType = NotificationType::None;
+    static inline int kWindowStartPosX = 0;
+    static inline int kWindowStartPosY = 0;
 
-    
     void Initialize(Player* player);
     void Update();
 
@@ -40,12 +41,16 @@ private:
     // 内部ヘルパー
     void SetCanClose();
     void AddWindow();
+    void MoveWindow();
     const std::wstring* GetUnusedNotificationTitle();
 
     // 包含
     Player* player_ = nullptr;
     Win32Window* window_ = nullptr;
 
+    // ウィンドウ移動後の座標
+    int nextWindowPosX_ = 0;
+    int nextWindowPosY_ = 0;
     // 使用している通知ウィンドウの名前
     std::vector<std::wstring> activeNotificationTitles_;
     // ウィンドウを増やした際に描画するもの
