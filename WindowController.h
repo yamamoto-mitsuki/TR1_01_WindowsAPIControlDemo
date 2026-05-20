@@ -10,6 +10,10 @@ public:
     void Initialize(Player* player);
     void Update();
 
+    // 調整項目を登録・適用
+    static void RegisterGV();
+    static void ApplyGV();
+
 private:
     // 内部ヘルパー
     void SetCanClose();
@@ -17,4 +21,6 @@ private:
     // 包含
     Player* player_ = nullptr;
     Win32Window* window_ = nullptr;
+
+    bool isWindowAdd = false;
 };

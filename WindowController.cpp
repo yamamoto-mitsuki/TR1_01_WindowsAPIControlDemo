@@ -33,3 +33,17 @@ void WindowController::SetCanClose() {
         };
     }
 }
+
+//==========================================
+// 調整項目の登録・適用
+//==========================================
+
+// ===== 登録 =====
+void WindowController::RegisterGV() {
+    auto gv = GlobalVariables::GetInstance();
+    auto gN = "Window";
+    auto cN = "Amout";
+    gv->AddGroup(gN);
+    gv->AddCategory(gN, cN);
+    gv->AddItem(gN, cN, "Add", );
+}
