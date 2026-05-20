@@ -39,21 +39,6 @@ void GameScene::Initialize() {
     // ウィンドウコントロール
     wndController_ = std::make_unique<WindowController>();
     wndController_->Initialize(player_.get());
-
-    // --- 調整項目 ---
-	auto* gv = GlobalVariables::GetInstance();
-	// グループとカテゴリを登録
-	gv->AddGroup("GameScene");
-	gv->AddCategory("GameScene", "Test");
-	gv->AddCategory("GameScene", "Test2");
-	// 初期値をセット
-	gv->SetValue("GameScene", "DirectionalLight", "Direction", Vector3{1.0f, 1.0f, 0.0f});
-	gv->SetValue("GameScene", "DirectionalLight", "Intensity", 1.0f);
-	gv->SetValue("GameScene", "Camera", "Translation", Vector3{0.0f, 0.0f, -10.0f});
-    GlobalVariables::ComboItem goalCombo;
-    goalCombo.options = { "Not", "Goal" };
-    goalCombo.currentIndex = 0;
-    gv->AddItem("GameScene", "Player", "GoalState", goalCombo);
 }
 
 //==========================================
@@ -87,6 +72,8 @@ void GameScene::Update() {
    
     ImGuiManager::AddDrawRequest(ImGuiManager::ImGuiRegion::Right, imiPos,imiSize,[]() {
         GlobalVariables::GetInstance()->Update();
+        ImGui::ShowDemoWindow();
+        ImGui::ShowDebugLogWindow();
     });
 #endif
 }

@@ -36,6 +36,9 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="NotificationScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CG2_Projects\TitleScene.h">
@@ -54,6 +57,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="GameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="NotificationScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

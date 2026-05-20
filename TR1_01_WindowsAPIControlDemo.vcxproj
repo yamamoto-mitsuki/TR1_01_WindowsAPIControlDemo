@@ -15,6 +15,7 @@
     <ClCompile Include="..\CG2_Projects\TitleScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NotificationScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="WindowController.cpp" />
   </ItemGroup>
@@ -23,6 +24,7 @@
     <ClInclude Include="..\CG2_Projects\TitleScene.h" />
     <ClInclude Include="Const.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="NotificationScene.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="WindowController.h" />
   </ItemGroup>
