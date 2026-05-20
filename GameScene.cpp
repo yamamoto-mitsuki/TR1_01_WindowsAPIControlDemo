@@ -1,4 +1,5 @@
 ﻿#include "GameScene.h"
+#include "Const.h"
 #include "MyEngine/Engine.h"
 #include "MyEngine/Utils/GlobalVariables.h"
 #ifdef USE_IMGUI
@@ -21,11 +22,11 @@ void GameScene::Finalize() {}
 void GameScene::Initialize() {
 	// カメラ
 	camera_ = std::make_unique<Camera>();
-	camera_->Init(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
+	camera_->Init(0.45f, static_cast<float>(kMainWindowWidth) / static_cast<float>(kMainWindowHeight), 0.1f, 100.0f);
 	camera_->SetTranslation({0.0f, 0.0f, -10.0f});
     // デバックカメラ
 	debugCamera_ = std::make_unique<DebugCamera>();
-	debugCamera_->Init(0.45f, 1280.0f / 720.0f, 0.1f, 100.0f);
+	debugCamera_->Init(0.45f, static_cast<float>(kMainWindowWidth) / static_cast<float>(kMainWindowHeight), 0.1f, 100.0f);
 	debugCamera_->SetTranslation({0.0f, 0.0f, -10.0f});
     // 光源
 	directionalLight_ = std::make_unique<DirectionalLight>();
@@ -72,8 +73,11 @@ void GameScene::Update() {
    
     ImGuiManager::AddDrawRequest(ImGuiManager::ImGuiRegion::Right, imiPos,imiSize,[]() {
         GlobalVariables::GetInstance()->Update();
-        ImGui::ShowDemoWindow();
-        ImGui::ShowDebugLogWindow();
+        // FPS表示
+        ImGui::Begin("Debug");
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        ImGui::Text("DeltaTime: %.4f ms", ImGui::GetIO().DeltaTime * 1000.0f);
+        ImGui::End();
     });
 #endif
 }

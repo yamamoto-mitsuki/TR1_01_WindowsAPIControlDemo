@@ -7,9 +7,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// エンジン初期化
 	WindowConfig wc;
 	wc.title = kMainWindowName;
-	wc.width = 1280;
-	wc.height = 720;
-	wc.gameAspectRatio = 1280.0f / 720.0f;
+	wc.width = 1000;
+	wc.height = 700;
+	wc.gameAspectRatio = static_cast<float>(kMainWindowWidth) / static_cast<float>(kMainWindowHeight);
 #ifdef _DEBUG
 	wc.isImGui = true;
 	wc.gameViewStart = { 0.0f,0.0f };
