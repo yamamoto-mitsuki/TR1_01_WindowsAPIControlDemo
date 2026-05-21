@@ -65,6 +65,20 @@ void GameScene::Update() {
 		debugCamera_->Update();
 	}
 #endif
+
+#ifdef USE_IMGUI
+    const Vector2& imiPos = { 0.0f,0.0f };
+    const Vector2& imiSize = { -1.0f,-1.0f };
+
+    ImGuiManager::AddDrawRequest(ImGuiManager::ImGuiRegion::Right, imiPos,imiSize,[]() {
+        GlobalVariables::GetInstance()->Update();
+        // FPS表示
+        //ImGui::Begin("Debug");
+        //ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        //ImGui::Text("DeltaTime: %.4f ms", ImGui::GetIO().DeltaTime * 1000.0f);
+        //ImGui::End();
+        });
+#endif
 }
 
 //==========================================
