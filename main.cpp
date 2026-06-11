@@ -11,8 +11,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	wc.height = 700;
 #ifdef _DEBUG
     wc.isImGui = true;
-    wc.gameViewStart = { 0.0f,0.0f };
-    wc.gameViewEnd.x = 0.5f;
 #endif
 	wc.gameAspectRatio = static_cast<float>(kMainWindowWidth) / static_cast<float>(kMainWindowHeight);
     wc.style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;

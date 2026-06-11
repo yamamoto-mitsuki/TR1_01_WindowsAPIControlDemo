@@ -24,7 +24,7 @@ public:
 
 public:
 
-	void Init(float fovY, float aspectRatio, float nearZ, float farZ) override;
+	void Initialize(float fovY, float aspectRatio, float nearZ, float farZ) override;
 	void Update() override;
 	void Rotate();
 	void Zoom();
@@ -47,17 +47,9 @@ public:
 	float GetFarZ() const { return farZ_; }
 	const Vector3& GetScale() const { return transform_.scale; }
 	const Vector3& GetRotation() const { return transform_.rotation; }
-	const Vector3& GetTranslation() const override { return transform_.translation; }
+	const Vector3& GetTranslation() const { return transform_.translation; }
 
 private:
 	// 内部ヘルパー
 	void ReCalcViewMatrix();
-
-	float fovY_ = 0.45f;
-	float aspectRatio_ = 1.0f;
-	float nearZ_ = 0.1f;
-	float farZ_ = 100.0f;
-	Transform transform_;
-	Matrix4x4 viewMatrix_ = {};
-	Matrix4x4 projectionMatrix_ = {};
 };

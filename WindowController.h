@@ -9,40 +9,46 @@ class Win32Window;
 // ウィンドウ制御クラス
 class WindowController {
 public:
-    // ウィンドウを増やした際に描画するもの
+    // 通知タイプ
     enum class NotificationType {
-        None,     // ウィンドウを増やさない
+        None,     // なにもしない
         TryClose, // 閉じようとした
         Found,    // 敵に見つかった
         Caught,   // 敵に捕まった
 
         Count,    // 参照用のカウント
     };
+    // ウィンドウ閉じれるか
+    enum class WindowClose {
+        NotClose, // 閉じれない
+        Normal,   // 閉じれる
+
+        Count,
+    };
 
     // 調整項目
-    static inline NotificationType kAddWindowType = NotificationType::None;
+    static inline NotificationType kNotificationType = NotificationType::None;
+	static inline WindowClose kWindowCloseState = WindowClose::NotClose;
     static inline int kWindowStartPosX = 0;
     static inline int kWindowStartPosY = 0;
 
     void Initialize(Player* player);
     void Update();
 
-    // 調整項目を登録・適用
+    // 調整項目を登録・適用・リセット
     static void RegisterGV();
-    static void ApplyGV();
+	static void ApplyGV();
+	static void ResetGV();
 
     // ===== ゲッター　=====
-    std::vector<std::wstring> GetActiveNotificationTitles() const { return activeNotificationTitles_; }
 
     // ===== セッター =====
-    void SetAddWindowByNotificationType(NotificationType type) { addWindowByNotificationType = type; }
 
 private:
     // 内部ヘルパー
     void SetCanClose();
-    void AddWindow();
     void MoveWindow();
-    const std::wstring* GetUnusedNotificationTitle();
+	void UpdateNotification();
 
     // 包含
     Player* player_ = nullptr;
@@ -51,8 +57,8 @@ private:
     // ウィンドウ移動後の座標
     int nextWindowPosX_ = 0;
     int nextWindowPosY_ = 0;
-    // 使用している通知ウィンドウの名前
-    std::vector<std::wstring> activeNotificationTitles_;
-    // ウィンドウを増やした際に描画するもの
-    NotificationType addWindowByNotificationType = NotificationType::None;
+    // 通知するかの状態
+    NotificationType notificationType = NotificationType::None;
+    // ウィンドウを閉じれるか
+	WindowClose isClose_ = WindowClose::NotClose;
 };

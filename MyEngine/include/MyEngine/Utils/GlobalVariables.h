@@ -2,7 +2,10 @@
 #include <vector>
 #include <string>
 #include <variant>
-#include <unordered_map>
+#include <map>
+#include <memory>
+#include <filesystem>
+#include <iomanip>
 #include "externals/imgui/imgui.h"
 #include "externals/nlohmann/json.hpp"
 #include "MyEngine/Math/Vector2.h"
@@ -10,114 +13,194 @@
 #include "MyEngine/Math/Vector4.h"
 #include "MyEngine/Log/LogManager.h"
 
+// ===== 調整項目の管理 =====
 class GlobalVariables {
 public:
-	// ImGui::Combo用
-	struct ComboItem {
-		std::vector<std::string> options; // 選択肢リスト
-		int currentIndex = 0;        // 現在の選択インデックス
-	};
+    // ImGui::Combo用
+    struct ComboItem {
+        std::vector<std::string> options; // 選択肢リスト
+        int currentIndex = 0;             // 現在の選択インデックス
+    };
 
-	using Item = std::variant<bool, int32_t, float, Vector2, Vector3, Vector4, ComboItem>;
-	using Category = std::unordered_map<std::string, Item>;
-	using Group = std::unordered_map<std::string, Category>;
-	using json = nlohmann::json;
+    // ImGui::ColorEdit4用
+    struct ColorItem {
+        uint32_t rgba = 0xFFFFFFFF;
+    };
+
+    using Item     = std::variant<bool, int32_t, float, Vector2, Vector3, Vector4, ComboItem, ColorItem>;
+    using json     = nlohmann::json;
+    // ツリーノード
+    struct GVNode {
+		std::vector<std::pair<std::string, Item>> items_;
+		std::vector<std::pair<std::string, std::shared_ptr<GVNode>>> children_;
+        // 子ノードを名前で検索
+        GVNode* FindChild(const std::string& name) {
+			for (const auto& [n, node] : children_) {
+				if (n == name) return node.get();
+                
+            }
+			return nullptr;
+        }
+        // 子ノードを名前で取得
+		GVNode* GetOrCreateChild(const std::string& name) {
+			for (const auto& [n, node] : children_) {
+				if (n == name) return node.get();
+            }
+			children_.emplace_back(name, std::make_shared<GVNode>());
+			return children_.back().second.get();
+        }
+        // アイテムを名前で検索
+		Item* FindItem(const std::string& name) {
+			for (auto& [n, item] : items_) {
+				if (n == name) return &item;
+			}
+			return nullptr;
+        }
+    };
+
+    // ===== グループの追加 ===== 
+    class GroupBuilder {
+	public:
+		GroupBuilder(GVNode* node, const std::string& sceneName) : node_(node), sceneName_(sceneName) {}
+
+        /// <summary>
+		/// 子グループに移動する。なければ作成する。
+		/// <para>例: .Group("A").Group("B").Add(...)</para>
+		/// </summary>
+		GroupBuilder Group(const std::string& groupName) { return GroupBuilder(node_->GetOrCreateChild(groupName), sceneName_); }
+
+        /// <summary>
+		/// 項目を追加する。すでに登録済みの場合はスキップする（値を上書きしない）。
+		/// <para>例: .Add("X", x).Add("Y", y)</para>
+		/// </summary>
+        template<typename T> 
+        GroupBuilder& Add(const std::string& itemName, const T& value) {
+            // 未登録のとき追加
+			if (!node_->FindItem(itemName)) {
+				node_->items_.emplace_back(itemName, Item(value));
+				LogManager::Log("[GlobalVariables::Add]" + sceneName_ + " / " + itemName);
+            }
+			return *this;
+        }
+
+    private:
+		GlobalVariables::GVNode* node_;
+		std::string sceneName_;
+    };
+
+    // ===== シーンの追加 =====
+	class SceneBuilder {
+	public:
+		SceneBuilder(GVNode* root, const std::string& sceneName) : root_(root), sceneName_(sceneName) {}
+
+		/// <summary>
+		/// グループを取得または作成してGroupBuilderを返す。
+		/// </summary>
+		GroupBuilder Group(const std::string& groupName) { return GroupBuilder(root_->GetOrCreateChild(groupName), sceneName_); }
+
+	private:
+		GVNode* root_;
+		std::string sceneName_;
+	};
 
 	// シングルトン
 	static GlobalVariables* GetInstance();
-	// 更新
-	void Update();
-	// グループ・カテゴリ・アイテム設定
-	void AddGroup(const std::string& groupName);
-	void AddCategory(const std::string& groupName, const std::string& categoryName);
-	template<typename T>
-	void AddItem(const std::string& groupName, const std::string& categoryName, const std::string& itemName, const T& item) {
-		// 項目が未登録のとき
-		if (datas_[groupName][categoryName].find(itemName) == datas_[groupName][categoryName].end()) {
-			SetValue(groupName, categoryName, itemName, item);
+
+	// コピー禁止
+	GlobalVariables(const GlobalVariables&) = delete;
+	GlobalVariables& operator=(const GlobalVariables&) = delete;
+
+	/// <summary>
+	/// シーンを宣言する。
+	/// <para>既に存在する場合はそのシーンのルートノードを返す。</para>
+	/// </summary>
+	/// <param name="sceneName">シーン名</param>
+	SceneBuilder Scene(const std::string& sceneName);
+
+	/// <summary>
+	/// 値を取得する。パスは "/" 区切りで指定する。
+	/// 例: Get&lt;Vector3&gt;("NormalScene", "Enemy/Transform", "Position") → NormalScene → Enemy → Transform → Position の値を返す
+	/// </summary>
+	/// <param name="sceneName">シーン名</param>
+	/// <param name="groupPath">"/" 区切りのグループパス（例: "Enemy/Transform"）</param>
+	/// <param name="itemName">項目名</param>
+	template<typename T> 
+	T Get(const std::string& sceneName, const std::string& groupPath, const std::string& itemName) const {
+		const GVNode* node = FindNode(sceneName, groupPath);
+		if (!node) {
+			LogManager::Error("[GlobalVariables::Get] ノードが見つかりません: " + sceneName + " / " + groupPath);
+			assert(false && "GlobalVariables::Get ノードが見つかりません");
 		}
-	}
-	// 変数をセット
-	template<typename T>
-	void SetValue(const std::string& groupName, const std::string& categoryName, const std::string& itemName, const T& item) {
-		datas_[groupName][categoryName][itemName] = Item(item);
-	}
-	// 変数を取得
-	template<typename T>
-	T GetValue(const std::string& groupName, const std::string& categoryName, const std::string& itemName) const {
-		// グループを検索
-		std::unordered_map<std::string, Group>::const_iterator itGroup = datas_.find(groupName);
-		// 未登録か
-		if (itGroup == datas_.end()) {
-			LogManager::Log(groupName + "グループは登録されていませんでした。");
-			assert(false && "GlobalVariablesファイルからの変数取得時、登録されていないグループを取得しようとしました。");
-		}
-		// グループ取得
-		const Group& group = datas_.at(groupName);
-
-		// カテゴリを検索
-		std::unordered_map<std::string, Category>::const_iterator itCategory = group.find(categoryName);
-		// 未登録か
-		if (itCategory == group.end()) {
-			LogManager::Log(groupName + "グループの" + categoryName + "カテゴリは登録されていませんでした。");
-			assert(false && "GlobalVariablesファイルからの変数取得時、登録されていないカテゴリを取得しようとしました。");
-		}
-		// カテゴリ取得
-		const Category& category = group.at(categoryName);
-		// 指定のキーがあるか
-		if (category.find(itemName) == category.end()) {
-			LogManager::Log(groupName + "グループの" + categoryName + "カテゴリ、" + itemName + "は登録されていませんでした。");
-			assert(false && "GlobalVariablesファイルからの変数取得時、登録されていないアイテムを取得しようとしました。");
-		}
-
-		return std::get<T>(category.at(itemName));
-	}
-	// 実際に描画
-	void DrawValue(const std::string& key, Item& item) {
-		std::visit([&](auto& v) {
-			using T = std::decay_t<decltype(v)>;
-
-			if constexpr (std::is_same_v<T, bool>) {
-				ImGui::Checkbox(key.c_str(), &v);
-
-			} else if constexpr (std::is_same_v<T, int32_t>) {
-				ImGui::DragInt(key.c_str(), &v);
-
-			} else if constexpr (std::is_same_v<T, float>) {
-				ImGui::DragFloat(key.c_str(), &v, 0.01f);
-
-			} else if constexpr (std::is_same_v<T, Vector2>) {
-				ImGui::DragFloat2(key.c_str(), &v.x,0.01f);
-
-			} else if constexpr (std::is_same_v<T, Vector3>) {
-				ImGui::DragFloat3(key.c_str(), &v.x, 0.01f);
-
-			} else if constexpr (std::is_same_v<T, Vector4>) {
-				ImGui::DragFloat4(key.c_str(), &v.x, 0.01f);
-
-			} else if constexpr (std::is_same_v<T, ComboItem>) {
-				std::vector<const char*> cstrs;
-				for (const auto& s : v.options) cstrs.push_back(s.c_str());
-				ImGui::Combo(key.c_str(), &v.currentIndex, cstrs.data(), static_cast<int>(cstrs.size()));
+		for (const auto& [name, item] : node->items_) {
+			if (name == itemName) {
+				return std::get<T>(item);
 			}
-		}, item);
+		}
+		LogManager::Error("[GlobalVariables::Get] アイテムが見つかりません: " + itemName);
+		assert(false && "GlobalVariables::Get アイテムが見つかりません");
+		return T{};
 	}
 
-	// ファイルに書き出し
-	void SaveFile(const std::string& groupName);
-	// ファイル読み込み
-	void LoadFile(const std::string& groupName);
-	// 全ファイル読み込み
+	/// <summary>
+	/// 登録済みアイテムの値を強制上書きする。
+	/// 未登録の場合は何もしない。
+	/// ウィンドウ追加後のComboリセット等、毎フレームでなく
+	/// 特定タイミングで値を書き換えたいときに使う。
+	/// </summary>
+	template<typename T> 
+	void Set(const std::string& sceneName, const std::string& groupPath, const std::string& itemName, const T& value) {
+		GVNode* node = FindNode(sceneName, groupPath);
+		if (!node) {
+			return;
+		}
+
+		Item* item = node->FindItem(itemName);
+		if (!item) {
+			return;
+		}
+
+		*item = Item(value);
+	}
+
+	/// <summary>
+	/// ImGuiの描画更新。ImGuiManager経由で毎フレーム呼ばれる。
+	/// </summary>
+	void Update();
+
+	/// <summary>
+	/// 指定シーンのデータをjsonに書き出す。
+	/// </summary>
+	void SaveFile(const std::string& sceneName);
+
+	/// <summary>
+	/// 指定シーンのjsonを読み込む。ファイルがなければスキップ。
+	/// </summary>
+	void LoadFile(const std::string& sceneName);
+
+	/// <summary>
+	/// Resources/GlobalVariables/ 以下の全jsonを読み込む。
+	/// </summary>
 	void LoadFiles();
+
+	/// <summary>
+	/// 登録済み全シーンを一括保存する。
+	/// </summary>
+	void SaveAll();
 
 private:
 	GlobalVariables() = default;
 	~GlobalVariables() = default;
-	GlobalVariables(const GlobalVariables&) = delete;
-	GlobalVariables& operator=(const GlobalVariables&) = delete;
 
-	// グローバル変数の保存先のファイルパス
-	const std::string kDirecoryPath = "Resources/GlobalVariables/";
-	// 全登録データ
-	std::unordered_map<std::string, Group> datas_;
+	// ===== 内部ヘルパー =====
+	const GVNode* FindNode(const std::string& sceneName, const std::string& groupPath) const;
+	GVNode* FindNode(const std::string& sceneName, const std::string& groupPath);
+	void NodeToJson(const GVNode& node, json& out) const;
+	void JsonToNode(const json& json, GVNode& node);
+#ifdef USE_IMGUI
+	void DrawNode(GVNode& node, const std::string& uniquePath);
+	void DrawItem(const std::string& label, Item& item, const std::string& uid);
+#endif
+
+	std::vector<std::pair<std::string, GVNode>> scenes_;
+	const std::string kDirectoryPath = "Resources/Parameters/";
 };

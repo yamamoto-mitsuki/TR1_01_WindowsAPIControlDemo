@@ -21,7 +21,6 @@ public:
 private:
 	std::unique_ptr<Camera> camera_;
 	std::unique_ptr<DebugCamera> debugCamera_;
-	std::unique_ptr<DirectionalLight> directionalLight_;
     std::unique_ptr<Player> player_;
     std::unique_ptr<WindowController> wndController_;
 

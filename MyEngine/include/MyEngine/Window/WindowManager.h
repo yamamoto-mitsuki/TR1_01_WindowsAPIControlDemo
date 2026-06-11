@@ -13,6 +13,10 @@
 class RenderWindow;
 class DirectXCommon;
 
+
+/// <summary>
+/// 全ウィンドウの管理クラス
+/// </summary>
 class WindowManager {
 public:
 	/// <summary>
@@ -24,9 +28,8 @@ public:
 	/// ウィンドウを追加
 	/// </summary>
 	/// <param name = "config">ウィンドウ設定</param>
-	/// <param name = "dxCommon">DirectXの共通機能</param>
 	/// <param name> = "initialScene">設定したいシーン</param>
-	void AddWindow(const WindowConfig& config, DirectXCommon* dxCommon, std::unique_ptr<IScene> initialScene = nullptr);
+	void AddWindow(const WindowConfig& config, std::unique_ptr<IScene> initialScene = nullptr);
 
 	/// <summary>
 	/// 全ウィンドウのメッセージ処理
@@ -58,31 +61,48 @@ public:
 	/// </summary>
 	void ExecuteOnly();
 
+	/// <summary>
+	/// PostRenderAll()内に呼ぶ処理を登録する
+	/// <para>用途: RaymarchRenderer::ClearRequests() など、プロジェクト固有のクリア処理</para>
+	/// </summary>
+	/// <param name="callback">登録したい処理</param>
+	/// <param name="tarhetTitle">描画したいウィンドウ（指定しない場合、全てのウィンドウに実行）</param>
+	int AddFrameEndCallback(std::function<void()> callback, const std::wstring& targetTitle = L"");
+
+	/// <summary>
+	/// AddFrameEndCallback()で登録したコールバックを解除
+	/// <param name="id">AddFrameEndCallback()の戻り値のid</param>
+	void RemoveFrameEndCallback(int id);
+
 	// ゲッター
 	HWND GetMainHWND() const { return windows_.empty() ? nullptr : windows_[0].window->GetHWND(); }
 	Win32Window* GetWindowByTitle(const std::wstring& title);
+	Win32Window* GetMainWindow() const { return windows_.empty() ? nullptr : windows_[0].window.get(); }
 	IScene* GetSceneByTitle(const std::wstring& title);
 
-#ifdef USE_IMGUI
-	std::wstring GetImGuiTargetWindow() const;
-	void SetImGuiTargetWindow(const std::wstring& windowTitle);
-#endif
-
 private:
-	void RenderImGui();
-	std::tuple<float, float, float, float> CalcGameViewRect(const WindowConfig& cfg, float totalWidth, float totalHeight);
-
 	// ウィンドウとウィンドウに描画するクラスをまとめた構造体
 	struct WindowSet {
 		std::unique_ptr<Win32Window> window;
 		std::unique_ptr<RenderWindow> renderer;
 		std::unique_ptr<SceneManager> sceneManager;
 	};
-
+	// 全ウィンドウ
 	std::vector<WindowSet> windows_;
-	DirectXCommon* dxCommon_ = nullptr;
+
+	// コールバックをIDと一緒に管理する
+	struct CallbackEntry {
+		int id;
+		std::wstring targetWindowTitle;
+		std::function<void()> func;
+	};
+	// コールバックIDの管理
+	int nextCallbackId_ = 0;
+	// プロジェクト側から登録する追加の描画処理
+	std::vector<CallbackEntry> framEndCallbacks_;
 
 #ifdef USE_IMGUI
 	std::wstring imguiTargetWindow_;
+	void RenderImGui();
 #endif
 };

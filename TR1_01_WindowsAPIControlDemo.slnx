@@ -4,6 +4,7 @@
   </Configurations>
   <Folder Name="/ソリューション項目/">
     <File Path=".editorconfig" />
+    <File Path=".gitignore" />
   </Folder>
   <Project Path="../CG2_Projects/externals/DirectXTex/DirectXTex_Desktop_2022_Win10.vcxproj" Id="371b9fa9-4c90-4ac6-a123-aced756d6c77" />
   <Project Path="../MyEngine_v1/MyEngine_v1.vcxproj" Id="1d0f63d3-16bb-43b8-985e-6bb516a1d662" />

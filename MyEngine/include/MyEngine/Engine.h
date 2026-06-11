@@ -9,10 +9,15 @@
 #include "MyEngine/Render/DirectXCommon.h"
 #include "MyEngine/Render/ModelManager.h"
 #include "MyEngine/Render/TextureManager.h"
+#include "MyEngine/Render/PSOManager.h"
 #include "MyEngine/Window/WindowManager.h"
 #include "MyEngine/Scene/IScene.h"
 #include "MyEngine/Scene/SceneManager.h"
 #include "MyEngine/Utils/GlobalVariables.h"
+#include "MyEngine/Debug/GameNotification.h"
+#include "MyEngine/Debug/MyAssert.h"
+#include "MyEngine/Render/EditorOverlay.h"
+#include "MyEngine/Render/ViewportRenderer.h"
 #include <chrono>
 #include <memory>
 #include <string>
@@ -74,5 +79,6 @@ private:
 	// 時間管理
 	float deltaTime_ = 0.0f; // 前フレームからの経過時間
 	float timeScale_ = 1.0f; // deltaTimeの経過倍率。通常1.0f
-	std::chrono::high_resolution_clock::time_point lastTime_; // 前フレームの時刻
+	std::chrono::high_resolution_clock::time_point lastTime_;    // 前フレームの時刻
+	std::chrono::high_resolution_clock::time_point updateStart_; // 更新処理の計測用
 };

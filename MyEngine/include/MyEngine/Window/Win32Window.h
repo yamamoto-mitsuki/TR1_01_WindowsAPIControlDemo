@@ -16,13 +16,10 @@ struct WindowConfig {
 	// ゲームビュー設定
 	float gameAspectRatio = 16.0f / 9.0f; // ゲーム画面のアスペクト比
 	bool isImGui = false;                 // ImGuiを使うか
-	Vector2 gameViewStart = { 0.0f,0.0f }; // ウィンドウ全体のどこからゲーム画面を描画するか
-	Vector2 gameViewEnd = { 0.75f,-1.0f }; // ウィンドウ全体のどこまでゲーム画面を描画するか
 };
 
 class Win32Window {
 public:
-
 	/// <summary>
 	/// 初期化(標準)
 	/// </summary>
@@ -51,12 +48,17 @@ public:
 	// セッター
 	void SetImGuiTarget(bool isTarget) { isImGuiTarget_ = isTarget; }
 	void SetOnResize(std::function<void(int, int)> callback) { onResize_ = std::move(callback); }
+	void SetPositionLock(bool isLocked) { isPositionLocked_ = isLocked; }
+
 	void ClearPendingResize() { pendingResize_ = false; }
 
 	// ウィンドウシステム
 	std::function<bool()> onCanClose_;
+	std::function<void()> onTryClose_;
+	bool isPositionLocked_ = false;
 
 private:
+
 	HWND hwnd_ = nullptr;
 	WNDCLASS wc_ = {};
 	int width_ = 0;

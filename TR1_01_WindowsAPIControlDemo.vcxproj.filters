@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CG2_Projects\TitleScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\AL3_Projects\CameraController.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -36,14 +33,8 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="NotificationScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CG2_Projects\TitleScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\AL3_Projects\CameraController.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -57,9 +48,6 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="GameScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="NotificationScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,19 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AL3_Projects\CameraController.cpp" />
-    <ClCompile Include="..\CG2_Projects\TitleScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NotificationScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="WindowController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\AL3_Projects\CameraController.h" />
-    <ClInclude Include="..\CG2_Projects\TitleScene.h" />
     <ClInclude Include="Const.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="NotificationScene.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="WindowController.h" />
   </ItemGroup>
@@ -76,7 +72,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)MyEngine\include;$(SolutionDirMyEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MyEngine\include;$(SolutionDir)externals;$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>

@@ -4,18 +4,10 @@
 
 class Player {
 public:
-    // ゴールの種類
-    enum class GoalState {
-        Not,  // まだゴールしていない
-        Goal, // ゴールした
-    };
-
-
     // 調整項目
     static inline Vector2 kInitPosition = { 640.0f,600.0f };
     static inline float kSpeed = 3.0f;
     static inline Vector2 kSize = { 30.0f,30.0f };
-    static inline GoalState kGoalState = GoalState::Not;
 
     void Initialize();
     void Update();
@@ -26,12 +18,9 @@ public:
     static void ApplyGV();
 
     // ゲッター
-    GoalState GetGoalState() const { return goalState_; }
 
 private:
     Vector2 position_;
     Vector2 size_;
     uint32_t color_;
-
-    GoalState goalState_;
 };

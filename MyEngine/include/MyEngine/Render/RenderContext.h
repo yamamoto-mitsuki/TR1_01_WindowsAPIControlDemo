@@ -1,17 +1,16 @@
 #pragma once
-#include "MyEngine/Render/DirectionalLight.h"
 #include "MyEngine/Math/Matrix4x4.h"
-#include "MyEngine/Render/ShaderStructs.h"
-#include "MyEngine/Utils/Transform.h"
 #include "MyEngine/Math/Vector2.h"
 #include "MyEngine/Math/Vector3.h"
 #include "MyEngine/Math/Vector4.h"
+#include "MyEngine/Render/DirectionalLight.h"
+#include "MyEngine/Render/ShaderStructs.h"
+#include "MyEngine/Utils/Transform.h"
 #include <cstdint>
 #include <d3d12.h>
 #include <vector>
 #include <wrl.h>
 
-class DirectXCommon;
 class DebugRender;
 class RenderWindow;
 
@@ -28,7 +27,6 @@ public:
 		ModelMaterialCB material;
 		TransformationMatrix matrices;
 		CameraDataCB cameraData;
-		uint32_t srvIndex = 0;
 		DirectionalLight* directionalLight = nullptr;
 	};
 
@@ -36,7 +34,6 @@ public:
 	struct DrawSpriteDesc {
 		VertexData2D vertices[4] = {};
 		Material material;
-		uint32_t srvIndex = 0;
 	};
 
 	// Line3D描画コール1回分の情報
@@ -49,10 +46,12 @@ public:
 public:
 	RenderContext(const RenderContext&) = delete;
 	RenderContext& operator=(const RenderContext&) = delete;
-
-	static RenderContext& GetInstance();
+	RenderContext(const RenderContext&&) = delete;
+	RenderContext& operator=(const RenderContext&&) = delete;
+	
+	
+	static void Initialize();
 	static void Release();
-	static void Init(DirectXCommon* dxCommon);
 	static void ResetDrawCallIndex();
 	static void StartDrawSprite();
 	static void StartDrawModel();
@@ -78,12 +77,14 @@ public:
 
 private:
 	RenderContext() = default;
+	~RenderContext() = default;
 
-	void InternalInit(DirectXCommon* dxCommon);
+	static RenderContext* instance_;
+
+	void InitInternal();
 	ID3D12PipelineState* SelectPSO(ShadingModel model, bool hasTexture);
 	static size_t AlignTo256(size_t size);
 
-	DirectXCommon* dxCommon_ = nullptr;
 	ShadingModel currentShadingModel_ = ShadingModel::Unlit;
 
 	// マテリアル用リングバッファ
