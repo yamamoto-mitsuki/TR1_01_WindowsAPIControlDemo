@@ -19,6 +19,7 @@ void  WindowController::Initialize(Player* player) {
 void WindowController::Update() {
     ApplyGV();
     notificationType = kNotificationType;
+	isClose_ = kWindowCloseState;
     SetCanClose();
     MoveWindow();
 	UpdateNotification();
@@ -96,7 +97,9 @@ void WindowController::RegisterGV() {
     comboItem.currentIndex = 0;
 	gv->Scene(sN).Group(gN).Add<GlobalVariables::ComboItem>("State/Notification", comboItem);
     // 閉じれるか
-
+	comboItem.options = {"NotClose", "CanClose"};
+	comboItem.currentIndex = 0;
+	gv->Scene(sN).Group(gN).Add<GlobalVariables::ComboItem>("State/Close", comboItem);
     // 位置
 	gv->Scene(sN).Group(gN).Add<int32_t>("PosX", kWindowStartPosX);
 	gv->Scene(sN).Group(gN).Add<int32_t>("PosY", kWindowStartPosX);
@@ -110,6 +113,9 @@ void WindowController::ApplyGV() {
     // 通知状態
 	int index = gv->Get<GlobalVariables::ComboItem>(sN, gN, "State/Notification").currentIndex;
     kNotificationType = static_cast<NotificationType>(index);
+    // 閉じれるか
+	index = gv->Get<GlobalVariables::ComboItem>(sN, gN, "State/Close").currentIndex;
+	kWindowCloseState = static_cast<WindowClose>(index);
     // 座標
 	kWindowStartPosX = gv->Get<int32_t>(sN, gN, "PosX");
 	kWindowStartPosY = gv->Get<int32_t>(sN, gN, "PosY");
