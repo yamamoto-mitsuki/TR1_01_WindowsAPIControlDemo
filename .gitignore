@@ -95,6 +95,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.lib
 
 # Chutzpah Test files
 _Chutzpah*
@@ -359,3 +360,4 @@ DirectXGame/imgui.ini
 
 # DirectXTex Compiled Shaders
 **/DirectXTex/Shaders/Compiled/
+/MyEngine/lib/Debug/MyEngine_v1.lib
