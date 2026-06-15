@@ -7,8 +7,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// エンジン初期化
 	WindowConfig wc;
 	wc.title = kMainWindowName;
-	wc.width = 1000;
-	wc.height = 700;
+	wc.width = kMainWindowWidth;
+	wc.height = kMainWindowHeight;
 #ifdef _DEBUG
     wc.isImGui = true;
 #endif

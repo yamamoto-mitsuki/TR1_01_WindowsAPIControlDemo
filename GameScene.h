@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Player.h"
 #include "WindowController.h"
+#include "Enemy.h"
 #include "MyEngine/Camera/Camera.h"
 #include "MyEngine/Camera/DebugCamera.h"
 #include "MyEngine/Render/ModelManager.h"
@@ -13,16 +14,30 @@ class GameScene : public IScene {
 public:
 	~GameScene() override;
 	void Initialize() override;
+	void Finalize() override;
 	void Update() override;
 	void Draw() override;
-	void Finalize() override;
 	std::unique_ptr<IScene> NextScene() override;
 
 private:
-	std::unique_ptr<Camera> camera_;
-	std::unique_ptr<DebugCamera> debugCamera_;
-    std::unique_ptr<Player> player_;
-    std::unique_ptr<WindowController> wndController_;
+	// ゲームの状態
+	enum class State {
+		Playing, // プレイ中
+		Caught,  // 捕まった(暗転中)
+		Clear,   // クリア
+	};
 
-	bool isDebugCameraActive_ = false;
+     // 捕まったときの処理(暗転を始める)
+	void OnCaught();
+	// スタート状態に戻す
+	void ResetStage();
+
+	std::unique_ptr<Camera> camera_; // エディタ用(2D描画では未使用)
+	std::unique_ptr<Stage> stage_;
+	std::unique_ptr<Player> player_;
+	std::vector<std::unique_ptr<Enemy>> enemies_;
+	std::unique_ptr<WindowController> wndController_;
+
+	State state_ = State::Playing;
+	float caughtTimer_ = 0.0f; // 暗転の残り時間
 };

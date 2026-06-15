@@ -16,6 +16,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{62b4a789-933d-4f24-9ed1-a0d4089ced38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Stage">
+      <UniqueIdentifier>{c2c1c883-7af3-40e1-bfb1-2fe165516801}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AL3_Projects\CameraController.cpp">
@@ -33,6 +36,15 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeRenderer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\AL3_Projects\CameraController.h">
@@ -49,6 +61,15 @@
     </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeRenderer.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
